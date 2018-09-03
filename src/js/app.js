@@ -22,7 +22,6 @@ window.addEventListener("load", function() {
         $(".metamask-modal").modal("show");
         networkName = "Unknown";
     }
-    console.log(networkName);
   } else {
     web3 = new Web3(
       new Web3.providers.HttpProvider(
