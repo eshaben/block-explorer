@@ -35,10 +35,12 @@ window.addEventListener("load", function() {
 function startApp() {
   $(".range").on("click", getAndValidateBlockRangeInput);
   $(".from-latest").on("click", getNumberOfBlocksToQueryFromLatest);
+  $(document).on("click", ".transaction", getTransactionData);
 }
 
 function getAndValidateBlockRangeInput(e) {
   e.preventDefault();
+  $(".validation-error").empty();
   const startBlock = $("#start-block").val();
   const endBlock = $("#end-block").val();
   if (startBlock >= endBlock) {
@@ -69,8 +71,9 @@ function getNumberOfBlocksFromLatestBlockData(blocksFromLatest) {
 function getBlockData(start, end) {
   $(".block-data").empty();
   for (var i = start; i <= end; i++) {
-    web3.eth.getBlock(i, true, function(error, result) {
+    web3.eth.getBlock(i, function(error, result) {
       if (!error) {
+        $(".no-data-message").empty();
         displayBlockData(result);
       } else {
         console.log(error);
@@ -80,8 +83,6 @@ function getBlockData(start, end) {
 }
 
 function displayBlockData(result) {
-  $(".validation-error").empty();
-  $(".no-data-message").hide();
   const date = new Date(result.timestamp * 1000);
   $(".block-data").append(`
     <tr>
@@ -95,4 +96,64 @@ function displayBlockData(result) {
       <td> ${result.uncles.length} </td>
     </tr>
     `);
+}
+
+function getTransactionData(e) {
+  e.preventDefault();
+  let blockNo = e.target.id;
+  web3.eth.getBlock(blockNo, true, function(error, result) {
+    if (!error) {
+      $(".transaction-data").empty();
+      let totalWei = new web3.BigNumber(0);
+      result.transactions.forEach(function(transaction) {
+        totalWei = totalWei.plus(transaction.value);
+        checkIfAddressIsContractAddress(transaction.to, function(result) {
+          let isContractAddress = result;
+          displayTransactionData(transaction, isContractAddress, blockNo);
+        });
+      });
+      convertTotalWeiToEtherAndDisplay(totalWei);
+    } else {
+      console.log(error);
+    }
+  });
+}
+
+function displayTransactionData(transaction, isContractAddress, blockNo) {
+  $(".validation-error").empty();
+  $(".no-data-message").hide();
+  updateModalTitleWithSelectedBlockNo(blockNo);
+  let valueInEther = web3.fromWei(transaction.value, "ether");
+  $(".transaction-data").append(`
+    <tr>
+      <td> ${transaction.from} </td>
+      <td> ${transaction.to} </td>
+      <td> ${isContractAddress} </td>
+      <td> ${valueInEther.toNumber()} </td>
+    </tr>
+    `);
+}
+
+function updateModalTitleWithSelectedBlockNo(blockNo) {
+  $("#transactionDataModalLabel").text(
+    `Block # ${blockNo} Transaction Details`
+  );
+}
+
+function checkIfAddressIsContractAddress(toAddress, callback) {
+  web3.eth.getCode(toAddress, function(error, result) {
+    if (result !== "0x") {
+      output = "yes";
+    } else {
+      output = "";
+    }
+    return callback(output);
+  });
+}
+
+function convertTotalWeiToEtherAndDisplay(totalWei) {
+  let totalForAllTransactionsInEther = web3.fromWei(totalWei, "ether");
+  $(".total-ether").text(
+    `Total Ether Transferred: ${totalForAllTransactionsInEther.toNumber()}`
+  );
 }
