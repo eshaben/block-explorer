@@ -62,9 +62,13 @@ function getNumberOfBlocksToQueryFromLatest(e) {
 
 function getNumberOfBlocksFromLatestBlockData(blocksFromLatest) {
   web3.eth.getBlock("latest", function(error, result) {
-    let latestBlock = result.number;
-    let startBlock = latestBlock - blocksFromLatest + 1;
-    getBlockData(startBlock, latestBlock);
+    if (!error) {
+      const latestBlock = result.number;
+      const startBlock = latestBlock - blocksFromLatest + 1;
+      getBlockData(startBlock, latestBlock);
+    } else {
+      console.log(error);
+    }
   });
 }
 
@@ -100,15 +104,16 @@ function displayBlockData(result) {
 
 function getTransactionData(e) {
   e.preventDefault();
-  let blockNo = e.target.id;
+  const blockNo = e.target.id;
   web3.eth.getBlock(blockNo, true, function(error, result) {
     if (!error) {
       $(".transaction-data").empty();
       let totalWei = new web3.BigNumber(0);
-      result.transactions.forEach(function(transaction) {
+      const transactions = result.transactions;
+      transactions.forEach(function(transaction) {
         totalWei = totalWei.plus(transaction.value);
         checkIfAddressIsContractAddress(transaction.to, function(result) {
-          let isContractAddress = result;
+          const isContractAddress = result;
           displayTransactionData(transaction, isContractAddress, blockNo);
         });
       });
@@ -141,14 +146,20 @@ function updateModalTitleWithSelectedBlockNo(blockNo) {
 }
 
 function checkIfAddressIsContractAddress(toAddress, callback) {
-  web3.eth.getCode(toAddress, function(error, result) {
-    if (result !== "0x") {
-      output = "yes";
-    } else {
-      output = "";
-    }
-    return callback(output);
-  });
+  let isAddress = web3.isAddress(toAddress);
+  if (isAddress) {
+    web3.eth.getCode(toAddress, function(error, result) {
+      if (!error) {
+        if (result !== "0x") {
+          output = "yes";
+        } else {
+          output = "";
+        }
+        return callback(output);
+      } else {
+      }
+    });
+  }
 }
 
 function convertTotalWeiToEtherAndDisplay(totalWei) {
