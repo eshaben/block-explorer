@@ -1,7 +1,7 @@
 {
   "name": "block-explorer",
   "version": "1.0.0",
-  "description": "",
+  "description": "An Ethereum Block Explorer",
   "main": "index.js",
   "scripts": {
     "start": "http-server -p 8080",
