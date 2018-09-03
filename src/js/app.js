@@ -33,5 +33,25 @@ window.addEventListener("load", function() {
 });
 
 function startApp() {
-  console.log(web3js);
+  $(".range").on("click", getAndValidateBlockRangeInput);
+  $(".from-latest").on("click", getBlocksFromLatestInput);
+}
+
+function getAndValidateBlockRangeInput(e) {
+  e.preventDefault();
+  var startBlockNo = $("#start-block").val();
+  var endBlockNo = $("#end-block").val();
+  if (startBlockNo => endBlockNo) {
+    $(".validation-error").append(
+      `<div class="alert alert-danger" role="alert" style="width:70%; margin:auto;">
+        The start block # must be less than the end block #
+      </div>`
+    );
+  }
+}
+
+function getBlocksFromLatestInput(e) {
+  e.preventDefault();
+  $(".validation-error").empty();
+  var blocksFromLatest = $("#blocks-from-latest").val();
 }
