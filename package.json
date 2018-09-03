@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "lite-server",
+    "start": "http-server -p 8080",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "lite-server": "^2.4.0",
+    "http-server": "^0.11.1",
     "web3": "^1.0.0-beta.35"
+  },
+  "dependencies": {
+    "node": "^10.9.0"
   }
 }
