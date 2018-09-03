@@ -46,7 +46,8 @@ function getAndValidateBlockRangeInput(e) {
   if (startBlock >= endBlock) {
     $(".validation-error").append(
       `<div class="alert alert-danger" role="alert" style="width:70%; margin:auto;">
-        The start block # must be less than the end block #
+        The start block # must be less than the end block #. If you are trying to search
+        using the latest from option, please click go instead of hitting enter.
       </div>`
     );
   }
