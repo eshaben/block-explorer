@@ -158,6 +158,7 @@ function checkIfAddressIsContractAddress(toAddress, callback) {
         }
         return callback(output);
       } else {
+        console.log(error);
       }
     });
   }
