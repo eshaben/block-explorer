@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "http-server": "^0.11.1",
-    "web3": "^1.0.0-beta.35"
+    "http-server": "^0.11.1"
   }
 }
