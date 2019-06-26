@@ -1,5 +1,5 @@
 # Ethereum Block Explorer
-> The purpose of this simple application is to allow users to view and explore Ethereum blockchain data. Users can enter a range of blocks to search from or search a number of blocks from the latest block. Then users are able to view data for those blocks, including how much total Ether was transferred, what addresses did the receiving and sending, and more! Follow the getting started instructions to start playing around with it yourself!
+> The purpose of this application is to allow users to view and explore Ethereum blockchain data. Users can enter a range of blocks to search from or search a number of blocks from the latest block. Then users are able to view data for those blocks, including how much total Ether was transferred, what addresses did the receiving and sending, and more! Follow the getting started instructions to start playing around with it yourself!
 
 ## Getting Started
 To run the project...
